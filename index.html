@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Default credit card payments in Taiwan.</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Default credit card payments in Taiwan.">
+  <meta name="author" content="Yves Ef">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Default credit card payments in Taiwan.</h1>
+    <h2></h2>
+    <p>Yves Ef<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>This research employed a binary variable, default payment (Yes = 1, No = 0), as the response variable. This study reviewed the literature and used the following 23 variables as explanatory variables: </p>
+
+<ul>
+<li>X1: Amount of the given credit (NT dollar): it includes both the individual consumer credit and his/her family (supplementary) credit.</li>
+<li>X2: Gender (1 = male; 2 = female).</li>
+<li>X3: Education (1 = graduate school; 2 = university; 3 = high school; 4 = others).</li>
+<li>X4: Marital status (1 = married; 2 = single; 3 = others).</li>
+<li>X5: Age (year).</li>
+<li>X6 - X23: Click here: <a href="http://archive.ics.uci.edu/ml/datasets/default+of+credit+card+clients">http://archive.ics.uci.edu/ml/datasets/default+of+credit+card+clients</a></li>
+</ul>
+
+<p>For this project we have choosed the logistic regression to predict default payment variable and only 5 variables as predictor: X1(LIM_BAL), X2(Gender), X3(Education), X4(Marital status) and X5(Age).</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Analysis</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>1. Reading data and processing</h3>
+
+<pre><code class="r">filename &lt;- &#39;CreditCard.xls&#39;
+
+  if(file.exists(filename)==FALSE){
+    download.file(&#39;http://archive.ics.uci.edu/ml/machine-learning-databases/00350/default%20of%20credit%20card%20clients.xls&#39;,filename,mode = &#39;w&#39;, quiet = TRUE)
+  }
+    Cdata &lt;- read.xls(filename,pattern = &#39;ID&#39;)
+  okData &lt;- data.frame(EDUCATION=factor(Cdata$EDUCATION),SEX=factor(Cdata$SEX),
+                       MARRIAGE=factor(Cdata$MARRIAGE),AGE=Cdata$AGE,
+                       LIMIT_BAL= Cdata$LIMIT_BAL,
+                       default.payment.next.month=factor(Cdata$default.payment.next.month)
+  )
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h3>2. Fit the prediction model</h3>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>##                  Estimate   Std. Error     z value      Pr(&gt;|z|)
+## (Intercept) -1.290962e+01 9.649952e+01  -0.1337792  8.935772e-01
+## EDUCATION1   1.111044e+01 9.649802e+01   0.1151365  9.083369e-01
+## EDUCATION2   1.117350e+01 9.649802e+01   0.1157899  9.078191e-01
+## EDUCATION3   1.114142e+01 9.649802e+01   0.1154575  9.080825e-01
+## EDUCATION4   1.003463e+01 9.649895e+01   0.1039870  9.171797e-01
+## EDUCATION5   9.698620e+00 9.649841e+01   0.1005055  9.199430e-01
+## EDUCATION6   1.049213e+01 9.649904e+01   0.1087278  9.134184e-01
+## SEX2        -1.628529e-01 3.338021e-02  -4.8787259  1.067734e-06
+## MARRIAGE1    1.118478e+00 5.316712e-01   2.1037025  3.540440e-02
+## MARRIAGE2    9.205236e-01 5.318850e-01   1.7306816  8.350856e-02
+## MARRIAGE3    9.059341e-01 5.536029e-01   1.6364332  1.017490e-01
+## AGE          3.180645e-03 2.032914e-03   1.5645744  1.176827e-01
+## LIMIT_BAL   -3.344832e-06 1.549348e-07 -21.5886432 2.296563e-103
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h3>3.  Test and validation</h3>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    0    1
+##          0 5841 1659
+##          1    0    0
+##                                           
+##                Accuracy : 0.7788          
+##                  95% CI : (0.7692, 0.7882)
+##     No Information Rate : 0.7788          
+##     P-Value [Acc &gt; NIR] : 0.5066          
+##                                           
+##                   Kappa : 0               
+##  Mcnemar&#39;s Test P-Value : &lt;2e-16          
+##                                           
+##             Sensitivity : 1.0000          
+##             Specificity : 0.0000          
+##          Pos Pred Value : 0.7788          
+##          Neg Pred Value :    NaN          
+##              Prevalence : 0.7788          
+##          Detection Rate : 0.7788          
+##    Detection Prevalence : 1.0000          
+##       Balanced Accuracy : 0.5000          
+##                                           
+##        &#39;Positive&#39; Class : 0               
+## 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Analysis'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='2. Fit the prediction model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='3.  Test and validation'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
